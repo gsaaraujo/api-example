@@ -1,3 +1,5 @@
+import crypto from 'node:crypto';
+
 import { BaseError } from '@common/helpers/base-error';
 import { ValueObject } from '@common/helpers/value-object';
 import { Either, left, right } from '@common/helpers/either';
@@ -5,6 +7,7 @@ import { Either, left, right } from '@common/helpers/either';
 import { InvalidPasswordError } from '@/auth/domain/errors/invalid-password-error';
 
 export type PasswordProps = {
+  salt?: string;
   value: string;
 };
 
@@ -15,7 +18,12 @@ export class Password extends ValueObject<PasswordProps> {
       return left(error);
     }
 
-    const password = new Password({ value: props.value });
+    const hash = crypto.createHash('sha256');
+    const salt = props.salt ?? crypto.randomUUID();
+
+    hash.update(props.value + salt);
+
+    const password = new Password({ salt, value: hash.digest('hex') });
     return right(password);
   }
 
