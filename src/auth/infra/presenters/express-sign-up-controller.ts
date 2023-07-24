@@ -2,7 +2,9 @@ import { Response, Request } from 'express';
 
 import { Either } from '@/common/helpers/either';
 import { BaseError } from '@/common/helpers/base-error';
+
 import { SignUpUsecase } from '@/auth/domain/usecases/sign-up-usecase';
+import { InvalidNameError } from '@/auth/domain/errors/invalid-name-error';
 import { AccountAlreadyExistsError } from '@/auth/domain/errors/account-already-exists-error';
 
 export class ExpressSignUpController {
@@ -20,6 +22,10 @@ export class ExpressSignUpController {
     }
 
     const baseError: BaseError = signUpOrError.value;
+
+    if (baseError instanceof InvalidNameError) {
+      return response.status(400).send({ error: baseError.message });
+    }
 
     if (baseError instanceof AccountAlreadyExistsError) {
       return response.status(409).send({ error: baseError.message });

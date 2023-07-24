@@ -62,4 +62,42 @@ describe('express-sign-up-controller', () => {
       error: 'Already exists an account with this email address',
     });
   });
+
+  it(`given the customer has no account
+      when attempting to sign up
+      and the name is invalid
+      then it should fail`, async () => {
+    const sut = await request('http://localhost:3000')
+      .post('/auth/sign-up')
+      .set('Content-Type', 'application/json')
+      .send({
+        name: 'G',
+        email: 'gabriel.houth@gmail.com',
+        password: '123456789',
+      });
+
+    expect(sut.status).toBe(400);
+    expect(sut.body).toStrictEqual({
+      error: 'Name must be between 2 and 50 characters',
+    });
+  });
+
+  it(`given the customer has no account
+      when attempting to sign up
+      and the name is invalid
+      then it should fail`, async () => {
+    const sut = await request('http://localhost:3000')
+      .post('/auth/sign-up')
+      .set('Content-Type', 'application/json')
+      .send({
+        name: 'Gabriel'.repeat(50),
+        email: 'gabriel.houth@gmail.com',
+        password: '123456789',
+      });
+
+    expect(sut.status).toBe(400);
+    expect(sut.body).toStrictEqual({
+      error: 'Name must be between 2 and 50 characters',
+    });
+  });
 });
