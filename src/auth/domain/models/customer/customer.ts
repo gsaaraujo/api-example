@@ -3,12 +3,13 @@ import { BaseError } from '@common/helpers/base-error';
 import { Either, left, right } from '@common/helpers/either';
 
 import { Email } from '@/auth/domain/models/email';
+import { Password } from '@/auth/domain/models/password';
 import { InvalidNameError } from '@/auth/domain/errors/invalid-name-error';
 
 export type CustomerProps = {
   name: string;
   email: Email;
-  password: string;
+  password: Password;
 };
 
 export class Customer extends Entity<CustomerProps> {
@@ -34,7 +35,7 @@ export class Customer extends Entity<CustomerProps> {
     return this.props.email;
   }
 
-  get password(): string {
+  get password(): Password {
     return this.props.password;
   }
 }

@@ -43,7 +43,7 @@ export class SignUpUsecase extends Usecase<SignUpUsecaseInput, SignUpUsecaseOutp
     const customerOrError: Either<BaseError, Customer> = Customer.create({
       name: input.name,
       email: Email.create({ value: input.email }).value as Email,
-      password: input.password,
+      password: Password.create({ value: input.password }).value as Password,
     });
 
     if (customerOrError.isLeft()) {
