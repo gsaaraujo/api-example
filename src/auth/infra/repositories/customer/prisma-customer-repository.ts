@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Customer as CustomerORM } from '@prisma/client';
 
 import { Customer } from '@/auth/domain/models/customer/customer';
 import { ICustomerRepository } from '@/auth/domain/models/customer/customer-repository';
@@ -21,5 +21,13 @@ export class PrismaCustomerRepository implements ICustomerRepository {
       email: customerCreated.email,
       password: customerCreated.password,
     });
+  }
+
+  async existsByEmail(email: string): Promise<boolean> {
+    const customerFound: CustomerORM | null = await this.prismaClient.customer.findUnique({
+      where: { email },
+    });
+
+    return !!customerFound;
   }
 }

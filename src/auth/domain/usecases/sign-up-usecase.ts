@@ -4,6 +4,7 @@ import { Either, left, right } from '@common/helpers/either';
 
 import { Customer } from '@/auth/domain/models/customer/customer';
 import { ICustomerRepository } from '@/auth/domain/models/customer/customer-repository';
+import { AccountAlreadyExistsError } from '@/auth/domain/errors/account-already-exists-error';
 
 export type SignUpUsecaseInput = {
   name: string;
@@ -19,6 +20,15 @@ export class SignUpUsecase extends Usecase<SignUpUsecaseInput, SignUpUsecaseOutp
   }
 
   public async execute(input: SignUpUsecaseInput): Promise<Either<BaseError, void>> {
+    const customerAlreadyExists: boolean = await this.customerRepository.existsByEmail(input.email);
+
+    if (customerAlreadyExists) {
+      const error = new AccountAlreadyExistsError(
+        'Already exists an account with this email address',
+      );
+      return left(error);
+    }
+
     const customerOrError: Either<BaseError, Customer> = Customer.create({
       name: input.name,
       email: input.email,
