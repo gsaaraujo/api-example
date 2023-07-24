@@ -3,6 +3,7 @@ import { BaseError } from '@common/helpers/base-error';
 import { Either, left, right } from '@common/helpers/either';
 
 import { Email } from '@/auth/domain/models/email';
+import { Password } from '@/auth/domain/models/password';
 import { Customer } from '@/auth/domain/models/customer/customer';
 import { ICustomerRepository } from '@/auth/domain/models/customer/customer-repository';
 import { AccountAlreadyExistsError } from '@/auth/domain/errors/account-already-exists-error';
@@ -21,7 +22,10 @@ export class SignUpUsecase extends Usecase<SignUpUsecaseInput, SignUpUsecaseOutp
   }
 
   public async execute(input: SignUpUsecaseInput): Promise<Either<BaseError, void>> {
-    const validations = [Email.create({ value: input.email })];
+    const validations = [
+      Email.create({ value: input.email }),
+      Password.create({ value: input.password }),
+    ];
 
     for (const validation of validations) {
       if (validation.isLeft()) return left(validation.value);
