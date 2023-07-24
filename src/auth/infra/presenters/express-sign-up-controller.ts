@@ -5,6 +5,7 @@ import { BaseError } from '@/common/helpers/base-error';
 
 import { SignUpUsecase } from '@/auth/domain/usecases/sign-up-usecase';
 import { InvalidNameError } from '@/auth/domain/errors/invalid-name-error';
+import { InvalidEmailError } from '@/auth/domain/errors/invalid-email-error';
 import { AccountAlreadyExistsError } from '@/auth/domain/errors/account-already-exists-error';
 
 export class ExpressSignUpController {
@@ -23,7 +24,7 @@ export class ExpressSignUpController {
 
     const baseError: BaseError = signUpOrError.value;
 
-    if (baseError instanceof InvalidNameError) {
+    if (baseError instanceof InvalidNameError || baseError instanceof InvalidEmailError) {
       return response.status(400).send({ error: baseError.message });
     }
 

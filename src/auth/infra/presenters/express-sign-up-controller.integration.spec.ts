@@ -100,4 +100,23 @@ describe('express-sign-up-controller', () => {
       error: 'Name must be between 2 and 50 characters',
     });
   });
+
+  it(`given the customer has no account
+      when attempting to sign up
+      and the email is invalid
+      then it should fail`, async () => {
+    const sut = await request('http://localhost:3000')
+      .post('/auth/sign-up')
+      .set('Content-Type', 'application/json')
+      .send({
+        name: 'Gabriel',
+        email: 'abc@com',
+        password: '123456789',
+      });
+
+    expect(sut.status).toBe(400);
+    expect(sut.body).toStrictEqual({
+      error: 'Email is not a valid email address',
+    });
+  });
 });

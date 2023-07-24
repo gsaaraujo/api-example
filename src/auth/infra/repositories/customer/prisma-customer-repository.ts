@@ -1,5 +1,6 @@
 import { PrismaClient, Customer as CustomerORM } from '@prisma/client';
 
+import { Email } from '@/auth/domain/models/email';
 import { Customer } from '@/auth/domain/models/customer/customer';
 import { ICustomerRepository } from '@/auth/domain/models/customer/customer-repository';
 
@@ -11,14 +12,14 @@ export class PrismaCustomerRepository implements ICustomerRepository {
       data: {
         id: customer.id,
         name: customer.name,
-        email: customer.email,
+        email: customer.email.value,
         password: customer.password,
       },
     });
 
     return Customer.reconstitute(customerCreated.id, {
       name: customerCreated.name,
-      email: customerCreated.email,
+      email: Email.reconstitute({ value: customerCreated.email }),
       password: customerCreated.password,
     });
   }

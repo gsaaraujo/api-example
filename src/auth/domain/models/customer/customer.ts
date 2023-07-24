@@ -2,11 +2,12 @@ import { Entity } from '@common/helpers/entity';
 import { BaseError } from '@common/helpers/base-error';
 import { Either, left, right } from '@common/helpers/either';
 
+import { Email } from '@/auth/domain/models/email';
 import { InvalidNameError } from '@/auth/domain/errors/invalid-name-error';
 
 export type CustomerProps = {
   name: string;
-  email: string;
+  email: Email;
   password: string;
 };
 
@@ -29,7 +30,7 @@ export class Customer extends Entity<CustomerProps> {
     return this.props.name;
   }
 
-  get email(): string {
+  get email(): Email {
     return this.props.email;
   }
 
