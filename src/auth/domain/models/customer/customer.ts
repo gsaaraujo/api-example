@@ -5,6 +5,7 @@ import { Either, left, right } from '@common/helpers/either';
 import { Email } from '@/auth/domain/models/email';
 import { Password } from '@/auth/domain/models/password';
 import { InvalidNameError } from '@/auth/domain/errors/invalid-name-error';
+import { InvalidPropertyError } from '@/auth/domain/errors/invalid-property-error';
 
 export type CustomerProps = {
   name: string;
@@ -14,12 +15,19 @@ export type CustomerProps = {
 
 export class Customer extends Entity<CustomerProps> {
   static create(props: CustomerProps): Either<BaseError, Customer> {
-    if (props.name.length < 2 || props.name.length > 50) {
+    if (typeof props.name !== 'string' || props.name.trim() === '') {
+      const error = new InvalidPropertyError('Name must be string and non-empty');
+      return left(error);
+    }
+
+    const name = props.name.trim();
+
+    if (name.length < 2 || name.length > 50) {
       const error = new InvalidNameError('Name must be between 2 and 50 characters');
       return left(error);
     }
 
-    const customer = new Customer(props);
+    const customer = new Customer({ ...props, name });
     return right(customer);
   }
 

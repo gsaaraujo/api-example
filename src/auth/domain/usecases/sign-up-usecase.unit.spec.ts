@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { Either } from '@/common/helpers/either';
@@ -12,6 +13,7 @@ import { AccountAlreadyExistsError } from '../errors/account-already-exists-erro
 import { InvalidNameError } from '../errors/invalid-name-error';
 import { InvalidEmailError } from '../errors/invalid-email-error';
 import { InvalidPasswordError } from '../errors/invalid-password-error';
+import { InvalidPropertyError } from '../errors/invalid-property-error';
 
 describe('sign-up-usecase', () => {
   let signUpUsecase: SignUpUsecase;
@@ -87,6 +89,78 @@ describe('sign-up-usecase', () => {
 
   it(`given the customer has no account
       when attempting to sign up
+      and the name is null
+      then it should fail`, async () => {
+    const output = new InvalidPropertyError('Name must be string and non-empty');
+
+    fakeCustomerRepository.customers = [];
+
+    const sut: Either<BaseError, void> = await signUpUsecase.execute({
+      name: null as any,
+      email: 'gabriel.houth@gmail.com',
+      password: '123456789',
+    });
+
+    expect(sut.isLeft()).toBeTruthy();
+    expect(sut.value).toStrictEqual(output);
+  });
+
+  it(`given the customer has no account
+      when attempting to sign up
+      and the name is undefined
+      then it should fail`, async () => {
+    const output = new InvalidPropertyError('Name must be string and non-empty');
+
+    fakeCustomerRepository.customers = [];
+
+    const sut: Either<BaseError, void> = await signUpUsecase.execute({
+      name: undefined as any,
+      email: 'gabriel.houth@gmail.com',
+      password: '123456789',
+    });
+
+    expect(sut.isLeft()).toBeTruthy();
+    expect(sut.value).toStrictEqual(output);
+  });
+
+  it(`given the customer has no account
+      when attempting to sign up
+      and the name is empty
+      then it should fail`, async () => {
+    const output = new InvalidPropertyError('Name must be string and non-empty');
+
+    fakeCustomerRepository.customers = [];
+
+    const sut: Either<BaseError, void> = await signUpUsecase.execute({
+      name: ' ',
+      email: 'gabriel.houth@gmail.com',
+      password: '123456789',
+    });
+
+    expect(sut.isLeft()).toBeTruthy();
+    expect(sut.value).toStrictEqual(output);
+  });
+
+  it(`given the customer has no account
+      when attempting to sign up
+      and the name is not string
+      then it should fail`, async () => {
+    const output = new InvalidPropertyError('Name must be string and non-empty');
+
+    fakeCustomerRepository.customers = [];
+
+    const sut: Either<BaseError, void> = await signUpUsecase.execute({
+      name: 123 as any,
+      email: 'gabriel.houth@gmail.com',
+      password: '123456789',
+    });
+
+    expect(sut.isLeft()).toBeTruthy();
+    expect(sut.value).toStrictEqual(output);
+  });
+
+  it(`given the customer has no account
+      when attempting to sign up
       and the name is invalid
       then it should fail`, async () => {
     const output = new InvalidNameError('Name must be between 2 and 50 characters');
@@ -114,6 +188,78 @@ describe('sign-up-usecase', () => {
     const sut: Either<BaseError, void> = await signUpUsecase.execute({
       name: 'Gabriel',
       email: 'abc@com',
+      password: '123456789',
+    });
+
+    expect(sut.isLeft()).toBeTruthy();
+    expect(sut.value).toStrictEqual(output);
+  });
+
+  it(`given the customer has no account
+      when attempting to sign up
+      and the email is null
+      then it should fail`, async () => {
+    const output = new InvalidPropertyError('Email must be string and non-empty');
+
+    fakeCustomerRepository.customers = [];
+
+    const sut: Either<BaseError, void> = await signUpUsecase.execute({
+      name: 'Gabriel',
+      email: null as any,
+      password: '123456789',
+    });
+
+    expect(sut.isLeft()).toBeTruthy();
+    expect(sut.value).toStrictEqual(output);
+  });
+
+  it(`given the customer has no account
+      when attempting to sign up
+      and the name is undefined
+      then it should fail`, async () => {
+    const output = new InvalidPropertyError('Email must be string and non-empty');
+
+    fakeCustomerRepository.customers = [];
+
+    const sut: Either<BaseError, void> = await signUpUsecase.execute({
+      name: 'Gabriel',
+      email: null as any,
+      password: '123456789',
+    });
+
+    expect(sut.isLeft()).toBeTruthy();
+    expect(sut.value).toStrictEqual(output);
+  });
+
+  it(`given the customer has no account
+      when attempting to sign up
+      and the name is empty
+      then it should fail`, async () => {
+    const output = new InvalidPropertyError('Email must be string and non-empty');
+
+    fakeCustomerRepository.customers = [];
+
+    const sut: Either<BaseError, void> = await signUpUsecase.execute({
+      name: 'Gabriel',
+      email: null as any,
+      password: '123456789',
+    });
+
+    expect(sut.isLeft()).toBeTruthy();
+    expect(sut.value).toStrictEqual(output);
+  });
+
+  it(`given the customer has no account
+      when attempting to sign up
+      and the name is not string
+      then it should fail`, async () => {
+    const output = new InvalidPropertyError('Email must be string and non-empty');
+
+    fakeCustomerRepository.customers = [];
+
+    const sut: Either<BaseError, void> = await signUpUsecase.execute({
+      name: 'Gabriel',
+      email: null as any,
       password: '123456789',
     });
 
@@ -151,6 +297,78 @@ describe('sign-up-usecase', () => {
       name: 'Gabriel',
       email: 'gabriel.houth@gmail.com',
       password: '12345678'.repeat(50),
+    });
+
+    expect(sut.isLeft()).toBeTruthy();
+    expect(sut.value).toStrictEqual(output);
+  });
+
+  it(`given the customer has no account
+      when attempting to sign up
+      and the email is null
+      then it should fail`, async () => {
+    const output = new InvalidPropertyError('Password must be string and non-empty');
+
+    fakeCustomerRepository.customers = [];
+
+    const sut: Either<BaseError, void> = await signUpUsecase.execute({
+      name: 'Gabriel',
+      email: 'gabriel.houth@gmail.com',
+      password: null as any,
+    });
+
+    expect(sut.isLeft()).toBeTruthy();
+    expect(sut.value).toStrictEqual(output);
+  });
+
+  it(`given the customer has no account
+      when attempting to sign up
+      and the name is undefined
+      then it should fail`, async () => {
+    const output = new InvalidPropertyError('Password must be string and non-empty');
+
+    fakeCustomerRepository.customers = [];
+
+    const sut: Either<BaseError, void> = await signUpUsecase.execute({
+      name: 'Gabriel',
+      email: 'gabriel.houth@gmail.com',
+      password: undefined as any,
+    });
+
+    expect(sut.isLeft()).toBeTruthy();
+    expect(sut.value).toStrictEqual(output);
+  });
+
+  it(`given the customer has no account
+      when attempting to sign up
+      and the name is empty
+      then it should fail`, async () => {
+    const output = new InvalidPropertyError('Password must be string and non-empty');
+
+    fakeCustomerRepository.customers = [];
+
+    const sut: Either<BaseError, void> = await signUpUsecase.execute({
+      name: 'Gabriel',
+      email: 'gabriel.houth@gmail.com',
+      password: ' ',
+    });
+
+    expect(sut.isLeft()).toBeTruthy();
+    expect(sut.value).toStrictEqual(output);
+  });
+
+  it(`given the customer has no account
+      when attempting to sign up
+      and the name is not string
+      then it should fail`, async () => {
+    const output = new InvalidPropertyError('Password must be string and non-empty');
+
+    fakeCustomerRepository.customers = [];
+
+    const sut: Either<BaseError, void> = await signUpUsecase.execute({
+      name: 'Gabriel',
+      email: 'gabriel.houth@gmail.com',
+      password: 1 as any,
     });
 
     expect(sut.isLeft()).toBeTruthy();
