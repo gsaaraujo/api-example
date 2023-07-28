@@ -4,16 +4,19 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Either } from '@/common/helpers/either';
 import { BaseError } from '@/common/helpers/base-error';
 
+import { Email } from '@/auth/domain/models/email';
+import { Password } from '@/auth/domain/models/password';
+import { Customer } from '@/auth/domain/models/customer/customer';
+
+import { InvalidNameError } from '@/auth/domain/errors/invalid-name-error';
+import { InvalidEmailError } from '@/auth/domain/errors/invalid-email-error';
+import { InvalidPasswordError } from '@/auth/domain/errors/invalid-password-error';
+import { InvalidPropertyError } from '@/auth/domain/errors/invalid-property-error';
+import { AccountAlreadyExistsError } from '@/auth/domain/errors/account-already-exists-error';
+
 import { SignUpUsecase } from '@/auth/domain/usecases/sign-up-usecase';
+
 import { FakeCustomerRepository } from '@/auth/infra/repositories/customer/fake-customer-repository';
-import { Customer } from '../models/customer/customer';
-import { Email } from '../models/email';
-import { Password } from '../models/password';
-import { AccountAlreadyExistsError } from '../errors/account-already-exists-error';
-import { InvalidNameError } from '../errors/invalid-name-error';
-import { InvalidEmailError } from '../errors/invalid-email-error';
-import { InvalidPasswordError } from '../errors/invalid-password-error';
-import { InvalidPropertyError } from '../errors/invalid-property-error';
 
 describe('sign-up-usecase', () => {
   let signUpUsecase: SignUpUsecase;

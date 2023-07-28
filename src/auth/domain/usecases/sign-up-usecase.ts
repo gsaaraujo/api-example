@@ -6,6 +6,7 @@ import { Email } from '@/auth/domain/models/email';
 import { Password } from '@/auth/domain/models/password';
 import { Customer } from '@/auth/domain/models/customer/customer';
 import { ICustomerRepository } from '@/auth/domain/models/customer/customer-repository';
+
 import { AccountAlreadyExistsError } from '@/auth/domain/errors/account-already-exists-error';
 
 export type SignUpUsecaseInput = {
